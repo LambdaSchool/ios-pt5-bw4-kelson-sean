@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5094616724ED8D0500C17BA7 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5094616624ED8D0500C17BA7 /* CoreDataStack.swift */; };
 		66F7337D24ECB90B009FF9C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7337C24ECB90B009FF9C3 /* AppDelegate.swift */; };
 		66F7337F24ECB90B009FF9C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7337E24ECB90B009FF9C3 /* SceneDelegate.swift */; };
 		66F7338424ECB90B009FF9C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66F7338224ECB90B009FF9C3 /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5094616624ED8D0500C17BA7 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		66F7337924ECB90B009FF9C3 /* PrivateYelp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrivateYelp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F7337C24ECB90B009FF9C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		66F7337E24ECB90B009FF9C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				66F7338A24ECB90C009FF9C3 /* LaunchScreen.storyboard */,
 				66F7338D24ECB90C009FF9C3 /* Info.plist */,
 				66F7338524ECB90B009FF9C3 /* PrivateYelp.xcdatamodeld */,
+				5094616624ED8D0500C17BA7 /* CoreDataStack.swift */,
 			);
 			path = PrivateYelp;
 			sourceTree = "<group>";
@@ -141,6 +144,7 @@
 				66F7338724ECB90B009FF9C3 /* PrivateYelp.xcdatamodeld in Sources */,
 				66F7337D24ECB90B009FF9C3 /* AppDelegate.swift in Sources */,
 				66F7337F24ECB90B009FF9C3 /* SceneDelegate.swift in Sources */,
+				5094616724ED8D0500C17BA7 /* CoreDataStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
