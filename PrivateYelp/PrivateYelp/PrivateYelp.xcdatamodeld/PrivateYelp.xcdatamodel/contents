@@ -27,8 +27,8 @@
         <relationship name="reviews" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Review" inverseName="user" inverseEntity="Review"/>
     </entity>
     <elements>
-        <element name="User" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="User" positionX="-282.80859375" positionY="106.7890625" width="128" height="88"/>
         <element name="Review" positionX="-54" positionY="9" width="128" height="208"/>
-        <element name="Restaurant" positionX="-36" positionY="81" width="128" height="133"/>
+        <element name="Restaurant" positionX="159.078125" positionY="87.3671875" width="128" height="133"/>
     </elements>
 </model>
