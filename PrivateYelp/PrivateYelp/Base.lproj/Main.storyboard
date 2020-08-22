@@ -36,14 +36,14 @@
                                 <rect key="frame" x="362" y="792" width="40" height="40"/>
                                 <state key="normal" image="myReviewsButtonBottomBarUnselected"/>
                                 <connections>
-                                    <segue destination="hLf-Rc-1hr" kind="show" id="mfz-Zt-KRj"/>
+                                    <segue destination="hLf-Rc-1hr" kind="show" identifier="MyReviewsSegue" id="mfz-Zt-KRj"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sqx-g9-FlE">
                                 <rect key="frame" x="12" y="792" width="40" height="40"/>
                                 <state key="normal" image="mapButtonBottomBarSelected"/>
                                 <connections>
-                                    <segue destination="hPo-ha-Ng0" kind="show" id="8SL-4R-JKZ"/>
+                                    <segue destination="hPo-ha-Ng0" kind="show" identifier="AddReviewSegue" id="8SL-4R-JKZ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -436,7 +436,7 @@
                                 <state key="normal" image="nextButton"/>
                                 <connections>
                                     <action selector="nextButtonTapped:" destination="hPo-ha-Ng0" eventType="touchUpInside" id="7oz-dt-bBN"/>
-                                    <segue destination="qHK-Ie-ndY" kind="show" animates="NO" id="E8M-6E-aBK"/>
+                                    <segue destination="qHK-Ie-ndY" kind="show" identifier="WhatIHadSegue" animates="NO" id="E8M-6E-aBK"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -588,7 +588,7 @@
                                 <state key="normal" image="nextButton"/>
                                 <connections>
                                     <action selector="nextButtonTapped:" destination="qHK-Ie-ndY" eventType="touchUpInside" id="ps2-5j-lJt"/>
-                                    <segue destination="YtC-pJ-HOg" kind="show" animates="NO" id="3Qs-vP-BXD"/>
+                                    <segue destination="YtC-pJ-HOg" kind="show" identifier="PhotosSegue" animates="NO" id="3Qs-vP-BXD"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -711,7 +711,7 @@
                                 <state key="normal" image="nextButton"/>
                                 <connections>
                                     <action selector="nextButtonTapped:" destination="YtC-pJ-HOg" eventType="touchUpInside" id="zeq-tU-mLW"/>
-                                    <segue destination="5w9-D8-DRR" kind="show" animates="NO" id="qdg-Pe-HXT"/>
+                                    <segue destination="5w9-D8-DRR" kind="show" identifier="ReviewNotesSegue" animates="NO" id="qdg-Pe-HXT"/>
                                 </connections>
                             </button>
                         </subviews>
