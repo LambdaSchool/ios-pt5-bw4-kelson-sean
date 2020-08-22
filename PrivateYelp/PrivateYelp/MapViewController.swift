@@ -8,25 +8,52 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class MapViewController: UIViewController {
-
+    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var myReviewsButton: UIButton!
     
     let locationManager = CLLocationManager()
-    var mostRecentPlacemark: CLPlacemark?
+    var mostRecentPlacemark: CLPlacemark? {
+        didSet {
+            if (restaurants.count > 0) {
+                self.mapView.addAnnotations(restaurants)
+            }
+        }
+    }
+    
+    var restaurants: [Restaurant] = []
+    
+    var restaurantBeingPassed: Restaurant?
+    var user: User?
+    var controller = ModelController()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        controller.oneTimeCreateUser(name: "Bob Test")
+        loadAndAssignUser()
+        loadAllRestaurants()
+//        deleteAllRecords()
         setUpViews()
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
+        
+        mapView.delegate = self
+        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "ReviewView")
+        
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     }
+    
+    //MARK: - Private Functions
     
     private func setUpViews() {
         myReviewsButton.layer.shadowColor = UIColor.black.cgColor
@@ -35,19 +62,75 @@ class MapViewController: UIViewController {
         myReviewsButton.layer.shadowOffset = CGSize(width: 0, height: 4)
         myReviewsButton.layer.masksToBounds = false
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    func loadAndAssignUser() {
+        let request : NSFetchRequest<User> = User.fetchRequest()
+        
+        do {
+            let arrayOfUserReturned = try CoreDataStack.shared.mainContext.fetch(request)
+            user = arrayOfUserReturned[0]
+            print(user?.reviews?.count)
+            print(user?.reviews)
+        } catch {
+            print("Error loading reviews")
+        }
     }
-    */
+    
+    func loadAllRestaurants() {
+        let request : NSFetchRequest<Restaurant> = Restaurant.fetchRequest()
+        
+        do {
+            restaurants = try CoreDataStack.shared.mainContext.fetch(request)
+            print("Restaurants: \(restaurants.count)")
+        } catch {
+            print("Error loading Restaurants")
+        }
+    }
+    
+    func deleteAllRecords() {
+        let context = CoreDataStack.shared.mainContext
+        
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Restaurant")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
 
+        do {
+            try context.execute(deleteRequest)
+            try context.save()
+        } catch {
+            print ("There was an error")
+        }
+    }
+    
+    @IBAction func createNewReviewTapped(_ sender: UIButton) {
+        guard let mostRecentPlacemark = mostRecentPlacemark,
+            let address = mostRecentPlacemark.name,
+            let latitude = mostRecentPlacemark.location?.coordinate.latitude,
+            let longitude = mostRecentPlacemark.location?.coordinate.longitude
+        else { return }
+            
+            let alertController = UIAlertController(title: "To add a new review", message: "please enter restaurant name below", preferredStyle: .alert)
+            let continueButton = UIAlertAction(title: "Continue", style: .default) { (action) in
+                let restaurantNameTextField = alertController.textFields![0]
+                
+                if restaurantNameTextField.text != "" {
+                    let newRestaurant = Restaurant(address: address, cusineType: "", latitude: String(Double(latitude)), longitude: String(Double(longitude)), name: restaurantNameTextField.text ?? "")
+                    restaurantNameTextField.endEditing(true)
+                    self.restaurantBeingPassed = newRestaurant
+                    self.performSegue(withIdentifier: "AddReviewSegue", sender: self)
+                }
+            }
+            alertController.addTextField { (textField) in
+                textField.placeholder = "Enter Restaurant Name Here..."
+                textField.textColor = .systemPurple
+            }
+            alertController.addAction(continueButton)
+            alertController.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+    }
 }
 
+
+//MARK: - CLLocationManagerDelegate
 extension MapViewController : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
@@ -74,11 +157,67 @@ extension MapViewController : CLLocationManagerDelegate {
                 NSLog("Name of placemark: \(placemark.name)")
             }
         }
-        
     }
-    
-    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         NSLog("location error: \(error)")
     }
 }
+
+//MARK: - MKMapViewDelegate
+
+extension MapViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        //let button = UIButton(type: .detailDisclosure)
+//        guard let restaurant = annotation as? Restaurant else { return nil }
+//        restaurant.name = "BillyBOBS"
+//        restaurant.latitude = String(Double(mostRecentPlacemark?.location?.coordinate.latitude ?? 0.0))
+//        restaurant.longitude = String(Double(mostRecentPlacemark?.location?.coordinate.longitude ?? 0.0))
+//
+//        mapView.addAnnotation(restaurant)
+        
+        var marker: MKMarkerAnnotationView?
+        
+        if restaurants.count > 0 {
+            guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "ReviewView") as? MKMarkerAnnotationView else {
+                fatalError("Incorrect Identifier")
+            }
+            annotationView.canShowCallout = true
+            annotationView.isEnabled = true
+            //annotationView.rightCalloutAccessoryView = button
+            marker = annotationView
+        }
+        
+        return marker
+        
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+//        let restaurant = view.annotation as! Restaurant
+//        let placeName = restaurant.name
+//        let placeInfo = restaurant.address
+//
+//        let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
+//        ac.addAction(UIAlertAction(title: "OK", style: .default))
+//        ac.addAction(UIAlertAction(title: "Add Review", style: .default, handler: { (alert) in
+//            self.restaurantBeingPassed = restaurant
+//            self.performSegue(withIdentifier: "AddReviewSegue", sender: self)
+//        }))
+//        present(ac, animated: true)
+    }
+}
+
+extension MapViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddReviewSegue" {
+            let destinationVC = segue.destination as? ReviewRatingChecklistViewController
+            destinationVC?.restaurant = self.restaurantBeingPassed
+            destinationVC?.controller = self.controller
+            destinationVC?.user = self.user
+        } else if segue.identifier == "MyReviewsSegue" {
+            let destinationVC = segue.destination as? MyReviewsViewController
+            destinationVC?.user = self.user
+        }
+    }
+}
+

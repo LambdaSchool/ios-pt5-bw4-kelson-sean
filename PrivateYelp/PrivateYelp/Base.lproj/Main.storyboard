@@ -43,6 +43,7 @@
                                 <rect key="frame" x="12" y="792" width="40" height="40"/>
                                 <state key="normal" image="mapButtonBottomBarSelected"/>
                                 <connections>
+                                    <action selector="createNewReviewTapped:" destination="5GJ-P2-0Fo" eventType="touchUpInside" id="ZNQ-Le-XVL"/>
                                     <segue destination="hPo-ha-Ng0" kind="show" identifier="AddReviewSegue" id="8SL-4R-JKZ"/>
                                 </connections>
                             </button>
@@ -555,7 +556,7 @@
                                             <action selector="saveButtonTapped:" destination="qHK-Ie-ndY" eventType="touchUpInside" id="kZW-qM-He1"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Write what you had" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="AOc-d1-CiE">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="AOc-d1-CiE">
                                         <rect key="frame" x="16" y="171" width="351" height="526"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <color key="textColor" red="0.2156862745" green="0.22352941179999999" blue="0.18039215689999999" alpha="0.5" colorSpace="custom" customColorSpace="calibratedRGB"/>

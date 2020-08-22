@@ -17,11 +17,15 @@ class ReviewNotesViewController: UIViewController {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     
+    var restaurant: Restaurant?
+    var review: Review?
+    var controller: ModelController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpViews()
+        print(restaurant?.name)
     }
     
     private func setUpViews() {
@@ -53,23 +57,52 @@ class ReviewNotesViewController: UIViewController {
         contentView.layer.shadowRadius = 5
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
         contentView.layer.masksToBounds = false
+        
+        nameLabel.text = self.restaurant?.name
+        addressLabel.text = self.restaurant?.address
     }
 
     @IBAction func saveButtonTapped(_ sender: Any) {
+        self.review?.reviewNotes = self.textView.text
+        guard let reviewCreated = review,
+            let itemPhoto = reviewCreated.itemPhoto,
+            let menuItem = reviewCreated.menuItem,
+            let reviewNotes = reviewCreated.reviewNotes,
+            let restaurant = reviewCreated.restaurant,
+            let user = reviewCreated.user
+            else { return }
+        
+        controller?.createReview(overallRating: reviewCreated.overallRating,                         dirtyBathrooms: reviewCreated.dirtyBathrooms,
+                                 fineDining: reviewCreated.fineDining,
+                                 goodForDates:reviewCreated.goodForDates,
+                                 itemPhoto: itemPhoto,
+                                 menuItem: menuItem,
+                                 noKids: reviewCreated.noKids,
+                                 reviewNotes: reviewNotes,
+                                 smallSpace: reviewCreated.smallSpace, restauraunt: restaurant,
+                                 user: user)
         self.navigationController?.popToRootViewController(animated: true)
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
+        self.review?.reviewNotes = self.textView.text
+        guard let reviewCreated = review,
+            let itemPhoto = reviewCreated.itemPhoto,
+            let menuItem = reviewCreated.menuItem,
+            let reviewNotes = reviewCreated.reviewNotes,
+            let restaurant = reviewCreated.restaurant,
+            let user = reviewCreated.user
+            else { return }
+        
+        controller?.createReview(overallRating: reviewCreated.overallRating,                         dirtyBathrooms: reviewCreated.dirtyBathrooms,
+                                 fineDining: reviewCreated.fineDining,
+                                 goodForDates:reviewCreated.goodForDates,
+                                 itemPhoto: itemPhoto,
+                                 menuItem: menuItem,
+                                 noKids: reviewCreated.noKids,
+                                 reviewNotes: reviewNotes,
+                                 smallSpace: reviewCreated.smallSpace, restauraunt: restaurant,
+                                 user: user)
         self.navigationController?.popToRootViewController(animated: true)
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

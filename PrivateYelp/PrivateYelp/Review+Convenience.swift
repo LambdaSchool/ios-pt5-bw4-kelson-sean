@@ -19,7 +19,7 @@ extension Review {
                      itemPhoto: Data,
                      menuItem: String,
                      reviewNotes: String,
-                     smallSpace: Bool,
+                     smallSpace: Bool = false,
                      for restauraunt: Restaurant,
                      from user: User,
                      context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {

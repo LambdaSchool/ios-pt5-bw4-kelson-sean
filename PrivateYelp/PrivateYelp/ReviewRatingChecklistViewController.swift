@@ -9,7 +9,7 @@
 import UIKit
 
 class ReviewRatingChecklistViewController: UIViewController {
-
+    
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
@@ -26,16 +26,27 @@ class ReviewRatingChecklistViewController: UIViewController {
     @IBOutlet weak var dirtyBathroomsButton: UIButton!
     @IBOutlet weak var fineDiningButton: UIButton!
     
+    var overallRatingValue = 0
+    
     var isKidsSelected: Bool = false
     var isGoodForDatesSelected: Bool = false
     var isSmallSpaceSelected: Bool = false
     var isDirtyBathroomsSelected: Bool = false
     var isFineDiningSelected: Bool = false
     
+    var restaurant: Restaurant?
+    var review: Review?
+    var controller: ModelController?
+    var user: User?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setUpViews()
+        print(restaurant?.name)
+        print(restaurant?.reviews?.count)
+        print(user?.reviews?.count)
     }
     
     
@@ -68,6 +79,9 @@ class ReviewRatingChecklistViewController: UIViewController {
         contentView.layer.shadowRadius = 5
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
         contentView.layer.masksToBounds = false
+        
+        nameLabel.text = self.restaurant?.name
+        addressLabel.text = self.restaurant?.address
     }
     
     @IBAction func oneStarTapped(_ sender: Any) {
@@ -77,6 +91,7 @@ class ReviewRatingChecklistViewController: UIViewController {
         self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
         self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
         
+        overallRatingValue = 1
     }
     
     @IBAction func twoStarTapped(_ sender: Any) {
@@ -85,6 +100,9 @@ class ReviewRatingChecklistViewController: UIViewController {
         self.threeStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
         self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
         self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+        
+        overallRatingValue = 2
+        
     }
     
     @IBAction func threeStarTapped(_ sender: Any) {
@@ -93,6 +111,8 @@ class ReviewRatingChecklistViewController: UIViewController {
         self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
         self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
         self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+        
+        overallRatingValue = 3
     }
     
     @IBAction func fourStarTapped(_ sender: Any) {
@@ -101,6 +121,8 @@ class ReviewRatingChecklistViewController: UIViewController {
         self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
         self.fourStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
         self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+        
+        overallRatingValue = 4
     }
     
     @IBAction func fiveStarTapped(_ sender: Any) {
@@ -109,6 +131,9 @@ class ReviewRatingChecklistViewController: UIViewController {
         self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
         self.fourStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
         self.fiveStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+        
+        overallRatingValue = 5
+        
     }
     
     @IBAction func noKidsTapped(_ sender: Any) {
@@ -162,20 +187,45 @@ class ReviewRatingChecklistViewController: UIViewController {
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
+        guard let image = UIImage(named: "nextButton") else { return }
+        guard let pngData = image.pngData() else { return }
+        
+        guard let restaurant = restaurant else { return }
+        guard let user = user else { return }
+        
+        let reviewCreated = Review(overallRating: Double(overallRatingValue), itemPhoto: pngData, menuItem: "", reviewNotes: "", for: restaurant, from: user)
+        controller?.createReview(overallRating: reviewCreated.overallRating,                         dirtyBathrooms: reviewCreated.dirtyBathrooms,
+                                 fineDining: reviewCreated.fineDining,
+                                 goodForDates:reviewCreated.goodForDates,
+                                 itemPhoto: pngData,
+                                 menuItem: reviewCreated.menuItem ?? "",
+                                 noKids: reviewCreated.noKids,
+                                 reviewNotes: reviewCreated.reviewNotes ?? "", smallSpace: reviewCreated.smallSpace, restauraunt: restaurant,
+                                 user: user)
+        
         self.navigationController?.popToRootViewController(animated: true)
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
+        
+        guard let image = UIImage(named: "nextButton") else { return }
+        guard let pngData = image.pngData() else { return }
+        
+        guard let restaurant = restaurant else { return }
+        guard let user = user else { return }
+        
+        let reviewCreated = Review(overallRating: Double(overallRatingValue), itemPhoto: pngData, menuItem: "", reviewNotes: "", for: restaurant, from: user)
+        review = reviewCreated
     }
     
-    /*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "WhatIHadSegue" {
+            let destinationVC = segue.destination as? ReviewWhatHadViewController
+            destinationVC?.restaurant = self.restaurant
+            destinationVC?.review = self.review
+            destinationVC?.controller = self.controller
+        }
     }
-    */
-
 }

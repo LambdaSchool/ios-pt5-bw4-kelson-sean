@@ -9,7 +9,7 @@
 import UIKit
 
 class ReviewWhatHadViewController: UIViewController {
-
+    
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
@@ -17,10 +17,13 @@ class ReviewWhatHadViewController: UIViewController {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var whatHadTextView: UITextView!
     
+    var restaurant: Restaurant?
+    var review: Review?
+    var controller: ModelController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setUpViews()
     }
     
@@ -53,23 +56,47 @@ class ReviewWhatHadViewController: UIViewController {
         contentView.layer.shadowRadius = 5
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
         contentView.layer.masksToBounds = false
+        
+        nameLabel.text = self.restaurant?.name
+        addressLabel.text = self.restaurant?.address
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
+        self.review?.menuItem = self.whatHadTextView.text
+        guard let reviewCreated = review,
+            let itemPhoto = reviewCreated.itemPhoto,
+            let menuItem = reviewCreated.menuItem,
+            let reviewNotes = reviewCreated.reviewNotes,
+            let restaurant = reviewCreated.restaurant,
+            let user = reviewCreated.user
+            else { return }
+        
+        controller?.createReview(overallRating: reviewCreated.overallRating,                         dirtyBathrooms: reviewCreated.dirtyBathrooms,
+                                 fineDining: reviewCreated.fineDining,
+                                 goodForDates:reviewCreated.goodForDates,
+                                 itemPhoto: itemPhoto,
+                                 menuItem: menuItem,
+                                 noKids: reviewCreated.noKids,
+                                 reviewNotes: reviewNotes,
+                                 smallSpace: reviewCreated.smallSpace, restauraunt: restaurant,
+                                 user: user)
+        
         self.navigationController?.popToRootViewController(animated: true)
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
+        self.review?.menuItem = self.whatHadTextView.text
+        
     }
     
-    /*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "PhotosSegue" {
+            let destinationVC = segue.destination as? ReviewPhotosViewController
+            destinationVC?.restaurant = self.restaurant
+            destinationVC?.review = self.review
+            destinationVC?.controller = self.controller
+        }
     }
-    */
-
 }

@@ -23,16 +23,27 @@ class ModelController {
     
     @discardableResult func createReview(overallRating: Double, dirtyBathrooms: Bool, fineDining: Bool, goodForDates: Bool, itemPhoto: Data, menuItem: String, noKids: Bool, reviewNotes: String, smallSpace: Bool, restauraunt: Restaurant, user: User ) -> Review {
         
-        let newReview = Review(overallRating: overallRating,
-            itemPhoto: itemPhoto,
-            menuItem: menuItem,
-            reviewNotes: reviewNotes,
-            smallSpace: smallSpace,
-            for: restauraunt,
-            from: user)
+//        let newReview = Review(overallRating: overallRating,
+//            itemPhoto: itemPhoto,
+//            menuItem: menuItem,
+//            reviewNotes: reviewNotes,
+//            smallSpace: smallSpace,
+//            for: restauraunt,
+//            from: user)
+        
+        let newReview = Review(overallRating: overallRating, dirtyBathrooms: dirtyBathrooms, fineDining: fineDining, goodForDates: goodForDates, noKids: noKids, itemPhoto: itemPhoto, menuItem: menuItem, reviewNotes: reviewNotes, smallSpace: smallSpace, for: restauraunt, from: user, context: CoreDataStack.shared.mainContext)
         CoreDataStack.shared.saveToPersistentStore()
         
         print(newReview)
         return newReview
+    }
+    
+    @discardableResult func createRestaurant(address: String, cusineType: String, latitude: String, longitude: String, name: String) -> Restaurant {
+        
+        let restaurant = Restaurant(address: address, cusineType: cusineType, latitude: latitude, longitude: longitude, name: name, context: CoreDataStack.shared.mainContext)
+        
+        CoreDataStack.shared.saveToPersistentStore()
+        return restaurant
+        
     }
 }
