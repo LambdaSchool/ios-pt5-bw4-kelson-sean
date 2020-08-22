@@ -12,6 +12,7 @@
 		5094617324ED971600C17BA7 /* Review+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5094617224ED971600C17BA7 /* Review+Convenience.swift */; };
 		5094617524ED972600C17BA7 /* User+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5094617424ED972600C17BA7 /* User+Convenience.swift */; };
 		5094617724ED98DA00C17BA7 /* ModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5094617624ED98DA00C17BA7 /* ModelController.swift */; };
+		50E4841524F0A021007EFDF2 /* Restaurant+MKAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E4841424F0A021007EFDF2 /* Restaurant+MKAnnotation.swift */; };
 		6611AE6424EDAFD9004ED358 /* ReviewRatingChecklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6611AE6324EDAFD9004ED358 /* ReviewRatingChecklistViewController.swift */; };
 		6611AE6624EDD6C6004ED358 /* ReviewWhatHadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6611AE6524EDD6C6004ED358 /* ReviewWhatHadViewController.swift */; };
 		6611AE6824EDD8F8004ED358 /* ReviewPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6611AE6724EDD8F8004ED358 /* ReviewPhotosViewController.swift */; };
@@ -37,6 +38,7 @@
 		5094617224ED971600C17BA7 /* Review+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Review+Convenience.swift"; sourceTree = "<group>"; };
 		5094617424ED972600C17BA7 /* User+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Convenience.swift"; sourceTree = "<group>"; };
 		5094617624ED98DA00C17BA7 /* ModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelController.swift; sourceTree = "<group>"; };
+		50E4841424F0A021007EFDF2 /* Restaurant+MKAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Restaurant+MKAnnotation.swift"; sourceTree = "<group>"; };
 		6611AE6324EDAFD9004ED358 /* ReviewRatingChecklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRatingChecklistViewController.swift; sourceTree = "<group>"; };
 		6611AE6524EDD6C6004ED358 /* ReviewWhatHadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewWhatHadViewController.swift; sourceTree = "<group>"; };
 		6611AE6724EDD8F8004ED358 /* ReviewPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPhotosViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				5094617224ED971600C17BA7 /* Review+Convenience.swift */,
 				5094617424ED972600C17BA7 /* User+Convenience.swift */,
 				5094617624ED98DA00C17BA7 /* ModelController.swift */,
+				50E4841424F0A021007EFDF2 /* Restaurant+MKAnnotation.swift */,
 			);
 			path = PrivateYelp;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				6611AE6824EDD8F8004ED358 /* ReviewPhotosViewController.swift in Sources */,
 				66F733A124ED97B1009FF9C3 /* MapViewController.swift in Sources */,
 				66DEB59624EF14CF001FA167 /* MyReviewsViewController.swift in Sources */,
+				50E4841524F0A021007EFDF2 /* Restaurant+MKAnnotation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
