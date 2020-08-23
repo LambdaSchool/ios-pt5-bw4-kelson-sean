@@ -21,7 +21,7 @@ class ModelController {
         return newUser
     }
     
-    @discardableResult func createReview(overallRating: Double, dirtyBathrooms: Bool, fineDining: Bool, goodForDates: Bool, itemPhoto: Data, menuItem: String, noKids: Bool, reviewNotes: String, smallSpace: Bool, restauraunt: Restaurant, user: User ) -> Review {
+    @discardableResult func createReview(overallRating: Double, dirtyBathrooms: Bool, fineDining: Bool, goodForDates: Bool, itemPhoto: Data?, menuItem: String, noKids: Bool, reviewNotes: String, smallSpace: Bool, restauraunt: Restaurant, user: User ) -> Review {
         
 //        let newReview = Review(overallRating: overallRating,
 //            itemPhoto: itemPhoto,

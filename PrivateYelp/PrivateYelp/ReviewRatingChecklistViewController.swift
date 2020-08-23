@@ -247,13 +247,11 @@ class ReviewRatingChecklistViewController: UIViewController {
         }
         
         if review == nil {
-            guard let image = UIImage(named: "nextButton") else { return }
-            guard let pngData = image.pngData() else { return }
             
             guard let restaurant = restaurant else { return }
             guard let user = user else { return }
 
-            _ = Review(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, noKids: isKidsSelected, itemPhoto: pngData, menuItem: "", reviewNotes: "", smallSpace: isSmallSpaceSelected, for: restaurant, from: user)
+            _ = Review(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, noKids: isKidsSelected, itemPhoto: nil, menuItem: "", reviewNotes: "", smallSpace: isSmallSpaceSelected, for: restaurant, from: user)
         }
         
         controller?.saveToPersistentStore()
@@ -271,13 +269,11 @@ class ReviewRatingChecklistViewController: UIViewController {
         }
 
         if review == nil {
-            guard let image = UIImage(named: "nextButton") else { return }
-            guard let pngData = image.pngData() else { return }
             
             guard let restaurant = restaurant else { return }
             guard let user = user else { return }
             
-            let reviewCreated = Review(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, noKids: isKidsSelected, itemPhoto: pngData, menuItem: "", reviewNotes: "", smallSpace: isSmallSpaceSelected, for: restaurant, from: user)
+            let reviewCreated = Review(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, noKids: isKidsSelected, itemPhoto: nil, menuItem: "", reviewNotes: "", smallSpace: isSmallSpaceSelected, for: restaurant, from: user)
             review = reviewCreated
         }
         

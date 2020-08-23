@@ -16,7 +16,7 @@ extension Review {
                      fineDining: Bool = false,
                      goodForDates: Bool = false,
                      noKids: Bool = false,
-                     itemPhoto: Data,
+                     itemPhoto: Data?,
                      menuItem: String,
                      reviewNotes: String,
                      smallSpace: Bool = false,
