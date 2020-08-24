@@ -51,6 +51,7 @@ class MyReviewsViewController: UIViewController {
         tableView.dataSource = self
         
         setUpViews()
+        print("CONTROLLA: \(controller)")
         //loadReviews()
     }
     
@@ -102,12 +103,14 @@ class MyReviewsViewController: UIViewController {
             let destinationVC = segue.destination as? ReviewRatingChecklistViewController
             guard let indexPath = tableView.indexPathForSelectedRow else { return }
             
-            destinationVC?.review = fetchResultsController.object(at: indexPath)
+            let reviewTapped = fetchResultsController.object(at: indexPath)
+            
+            destinationVC?.review = reviewTapped
+            destinationVC?.restaurant = reviewTapped.restaurant
+            destinationVC?.user = reviewTapped.user
             destinationVC?.controller = self.controller
         }
     }
-
-
 }
 
 extension MyReviewsViewController: UITableViewDataSource {

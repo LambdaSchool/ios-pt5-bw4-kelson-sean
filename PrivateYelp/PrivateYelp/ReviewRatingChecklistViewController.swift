@@ -35,6 +35,7 @@ class ReviewRatingChecklistViewController: UIViewController {
     var isFineDiningSelected: Bool = false
     
     var restaurant: Restaurant?
+    var reviewFromDetail: Review?
     var review: Review? 
     var controller: ModelController?
     var user: User?
@@ -45,9 +46,11 @@ class ReviewRatingChecklistViewController: UIViewController {
         
         setUpViews()
         updateViews()
-        print(restaurant?.name)
-        print(restaurant?.reviews?.count)
-        print(user?.reviews?.count)
+//        print("CONTROLLA: \(controller)")
+//        print("Restaurant \(restaurant?.name)")
+//        print("Biatch \(review?.menuItem)")
+//        print(restaurant?.reviews?.count)
+//        print(user?.reviews?.count)
     }
     
     
@@ -187,54 +190,32 @@ class ReviewRatingChecklistViewController: UIViewController {
         
     }
     
-    @IBAction func noKidsTapped(_ sender: Any) {
-        if !self.isKidsSelected {
-            self.noKidsButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
-            self.isKidsSelected = true
-        } else {
-            self.noKidsButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
-            self.isKidsSelected = false
-        }
+    private func updateReview(review: Review) {
+        
+        guard let restaurant = review.restaurant else { return }
+        guard let user = review.user else { return }
+        
+        controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
+        
     }
     
-    @IBAction func goodForDatesTapped(_ sender: Any) {
-        if !self.isGoodForDatesSelected {
-            self.goodForDatesButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
-            self.isGoodForDatesSelected = true
-        } else {
-            self.goodForDatesButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
-            self.isGoodForDatesSelected = false
-        }
+    @IBAction func noKidsTapped(_ sender: UIButton) {
+        checkAndUpdateChecklist(sender: sender)
     }
     
-    @IBAction func smallSpaceTapped(_ sender: Any) {
-        if !self.isSmallSpaceSelected {
-            self.smallSpaceButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
-            self.isSmallSpaceSelected = true
-        } else {
-            self.smallSpaceButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
-            self.isSmallSpaceSelected = false
-        }
+    @IBAction func goodForDatesTapped(_ sender: UIButton) {
+        checkAndUpdateChecklist(sender: sender)
     }
     
-    @IBAction func dirtyBathroomsTapped(_ sender: Any) {
-        if !self.isDirtyBathroomsSelected {
-            self.dirtyBathroomsButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
-            self.isDirtyBathroomsSelected = true
-        } else {
-            self.dirtyBathroomsButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
-            self.isDirtyBathroomsSelected = false
-        }
+    @IBAction func smallSpaceTapped(_ sender: UIButton) {
+        checkAndUpdateChecklist(sender: sender)    }
+    
+    @IBAction func dirtyBathroomsTapped(_ sender: UIButton) {
+        checkAndUpdateChecklist(sender: sender)
     }
     
-    @IBAction func fineDiningTapped(_ sender: Any) {
-        if !self.isFineDiningSelected {
-            self.fineDiningButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
-            self.isFineDiningSelected = true
-        } else {
-            self.fineDiningButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
-            self.isFineDiningSelected = false
-        }
+    @IBAction func fineDiningTapped(_ sender: UIButton) {
+        checkAndUpdateChecklist(sender: sender)
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
@@ -244,18 +225,19 @@ class ReviewRatingChecklistViewController: UIViewController {
             review?.fineDining = isFineDiningSelected
             review?.goodForDates = isGoodForDatesSelected
             review?.noKids = isKidsSelected
+            
+            guard let review = review else { return }
+            updateReview(review: review)
         }
         
         if review == nil {
             
             guard let restaurant = restaurant else { return }
             guard let user = user else { return }
-
-            _ = Review(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, noKids: isKidsSelected, itemPhoto: nil, menuItem: "", reviewNotes: "", smallSpace: isSmallSpaceSelected, for: restaurant, from: user)
+            
+            controller?.createReview(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, itemPhoto: nil, menuItem: "", noKids: isKidsSelected, reviewNotes: "", smallSpace: isSmallSpaceSelected, restauraunt: restaurant, user: user)
         }
-        
-        controller?.saveToPersistentStore()
-        
+                
         self.navigationController?.popToRootViewController(animated: true)
     }
     
@@ -266,19 +248,22 @@ class ReviewRatingChecklistViewController: UIViewController {
             review?.fineDining = isFineDiningSelected
             review?.goodForDates = isGoodForDatesSelected
             review?.noKids = isKidsSelected
-        }
-
-        if review == nil {
             
+            guard let review = review else { return }
+            guard let restaurant = review.restaurant else { return }
+            guard let user = review.user else { return }
+            
+            controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
+        }
+        
+        if review == nil {
             guard let restaurant = restaurant else { return }
             guard let user = user else { return }
             
-            let reviewCreated = Review(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, noKids: isKidsSelected, itemPhoto: nil, menuItem: "", reviewNotes: "", smallSpace: isSmallSpaceSelected, for: restaurant, from: user)
-            review = reviewCreated
+           let newReview = controller?.createReview(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, itemPhoto: nil, menuItem: "", noKids: isKidsSelected, reviewNotes: "", smallSpace: isSmallSpaceSelected, restauraunt: restaurant, user: user)
+            
+            review = newReview
         }
-        
-        controller?.saveToPersistentStore()
-        
     }
     
     // MARK: - Navigation
@@ -289,6 +274,55 @@ class ReviewRatingChecklistViewController: UIViewController {
             destinationVC?.restaurant = self.restaurant
             destinationVC?.review = self.review
             destinationVC?.controller = self.controller
+        }
+    }
+}
+
+// MARK: - Checking and updating checklist
+extension ReviewRatingChecklistViewController {
+    private func checkAndUpdateChecklist(sender: UIButton) {
+        if sender == noKidsButton {
+            if !self.isKidsSelected {
+                self.noKidsButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
+                self.isKidsSelected = true
+            } else {
+                self.noKidsButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
+                self.isKidsSelected = false
+            }
+        } else if sender == goodForDatesButton {
+            if !self.isGoodForDatesSelected {
+                self.goodForDatesButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
+                self.isGoodForDatesSelected = true
+            } else {
+                self.goodForDatesButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
+                self.isGoodForDatesSelected = false
+            }
+        } else if sender == smallSpaceButton {
+            if !self.isSmallSpaceSelected {
+                self.smallSpaceButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
+                self.isSmallSpaceSelected = true
+            } else {
+                self.smallSpaceButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
+                self.isSmallSpaceSelected = false
+            }
+        } else if sender == dirtyBathroomsButton {
+            if !self.isDirtyBathroomsSelected {
+                self.dirtyBathroomsButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
+                self.isDirtyBathroomsSelected = true
+                print(self.isDirtyBathroomsSelected)
+            } else {
+                self.dirtyBathroomsButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
+                self.isDirtyBathroomsSelected = false
+            }
+        } else if sender == fineDiningButton {
+            if !self.isFineDiningSelected {
+                self.fineDiningButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
+                self.isFineDiningSelected = true
+                print(self.isFineDiningSelected)
+            } else {
+                self.fineDiningButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
+                self.isFineDiningSelected = false
+            }
         }
     }
 }

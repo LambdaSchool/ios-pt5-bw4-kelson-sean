@@ -61,6 +61,8 @@ class ReviewNotesViewController: UIViewController {
         
         nameLabel.text = self.restaurant?.name
         addressLabel.text = self.restaurant?.address
+        
+        textView.becomeFirstResponder()
     }
     
     private func updateViews() {
@@ -77,18 +79,29 @@ class ReviewNotesViewController: UIViewController {
             self.textView.text = self.review?.reviewNotes
         }
     }
+    
+    private func updateReview(review: Review) {
+        
+        guard let restaurant = review.restaurant else { return }
+        guard let user = review.user else { return }
+        
+        controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
+        
+    }
 
     @IBAction func saveButtonTapped(_ sender: Any) {
         self.review?.reviewNotes = self.textView.text
-        controller?.saveToPersistentStore()
- 
+        guard let review = review else { return }
+        updateReview(review: review)
+         
         self.navigationController?.popToRootViewController(animated: true)
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
         self.review?.reviewNotes = self.textView.text
-        controller?.saveToPersistentStore()
-        
+        guard let review = review else { return }
+        updateReview(review: review)
+                
         self.navigationController?.popToRootViewController(animated: true)
     }
 }

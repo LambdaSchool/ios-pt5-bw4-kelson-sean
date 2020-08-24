@@ -84,6 +84,14 @@ class ReviewPhotosViewController: UIViewController, UINavigationControllerDelega
         }
     }
     
+    private func updateReview(review: Review) {
+        
+        guard let restaurant = review.restaurant else { return }
+        guard let user = review.user else { return }
+        
+        controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
+        
+    }
     
     @IBAction func addPhotoTapped(_ sender: Any) {
         if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
@@ -98,14 +106,18 @@ class ReviewPhotosViewController: UIViewController, UINavigationControllerDelega
     @IBAction func nextButtonTapped(_ sender: Any) {
         if let imageData = imageData {
             self.review?.itemPhoto = imageData
-            controller?.saveToPersistentStore()
+            guard let review = review else { return }
+            updateReview(review: review)
+            
         }
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
         if let imageData = imageData {
             self.review?.itemPhoto = imageData
-            controller?.saveToPersistentStore()
+            guard let review = review else { return }
+            updateReview(review: review)
+            
         }
         self.navigationController?.popToRootViewController(animated: true)
     }

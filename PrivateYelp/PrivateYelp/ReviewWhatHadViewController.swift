@@ -57,6 +57,8 @@ class ReviewWhatHadViewController: UIViewController {
         contentView.layer.shadowRadius = 5
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
         contentView.layer.masksToBounds = false
+        
+        whatHadTextView.becomeFirstResponder()
     }
     
     private func updateViews() {
@@ -74,16 +76,27 @@ class ReviewWhatHadViewController: UIViewController {
         }
     }
     
+    private func updateReview(review: Review) {
+        
+        guard let restaurant = review.restaurant else { return }
+        guard let user = review.user else { return }
+        
+        controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
+    }
+    
     @IBAction func saveButtonTapped(_ sender: Any) {
         self.review?.menuItem = self.whatHadTextView.text
-        controller?.saveToPersistentStore()
-        
+        guard let review = review else { return }
+        updateReview(review: review)
+                
         self.navigationController?.popToRootViewController(animated: true)
     }
     
     @IBAction func nextButtonTapped(_ sender: Any) {
         self.review?.menuItem = self.whatHadTextView.text
-        controller?.saveToPersistentStore()
+        
+        guard let review = review else { return }
+        updateReview(review: review)
         
     }
     

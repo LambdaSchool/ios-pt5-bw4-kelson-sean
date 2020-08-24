@@ -217,6 +217,7 @@ extension MapViewController {
         } else if segue.identifier == "MyReviewsSegue" {
             let destinationVC = segue.destination as? MyReviewsViewController
             destinationVC?.user = self.user
+            destinationVC?.controller = self.controller
         }
     }
 }
