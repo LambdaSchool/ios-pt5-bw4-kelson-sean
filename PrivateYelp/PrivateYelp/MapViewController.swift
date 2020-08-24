@@ -33,6 +33,11 @@ class MapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
+        loadAllRestaurants()
+
+        if restaurants.count > 0 {
+            self.mapView.addAnnotations(restaurants)
+        }
     }
     
     override func viewDidLoad() {
@@ -40,7 +45,6 @@ class MapViewController: UIViewController {
         
         controller.oneTimeCreateUser(name: "Bob Test")
         loadAndAssignUser()
-        loadAllRestaurants()
 //        deleteAllRecords()
         setUpViews()
         
