@@ -15,6 +15,7 @@ class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var myReviewsButton: UIButton!
     
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let locationManager = CLLocationManager()
     var mostRecentPlacemark: CLPlacemark? {
         didSet {
@@ -33,9 +34,12 @@ class MapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
-        loadAllRestaurants()
-
+        
         if restaurants.count > 0 {
+            loadAllRestaurants()
+            self.mapView.addAnnotations(restaurants)
+        } else if user != nil && restaurants.count < 1 {
+            loadAllRestaurants()
             self.mapView.addAnnotations(restaurants)
         }
     }
@@ -43,9 +47,16 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        controller.oneTimeCreateUser(name: "Bob Test")
-        loadAndAssignUser()
-//        deleteAllRecords()
+        if (!appDelegate.hasAlreadyLaunched) {
+            presentAlertAndCreateUser()
+        } else {
+            loadAndAssignUser()
+            loadAllRestaurants()
+        }
+        
+        mapView.userLocation.title = nil
+        mapView.showsUserLocation = false
+        
         setUpViews()
         
         locationManager.delegate = self
@@ -67,7 +78,27 @@ class MapViewController: UIViewController {
         myReviewsButton.layer.masksToBounds = false
     }
     
-    func loadAndAssignUser() {
+    private func presentAlertAndCreateUser() {
+        
+        if (!appDelegate.hasAlreadyLaunched) {
+            appDelegate.setHasAlreadyLaunched()
+            let alertController = UIAlertController(title: "Welcome to curator", message: "please enter your name below", preferredStyle: .alert)
+            let continueButton = UIAlertAction(title: "Continue", style: .default) { (action) in
+                let usersNameTextField = alertController.textFields![0]
+                
+                self.user = self.controller.oneTimeCreateUser(name: usersNameTextField.text ?? "")
+                usersNameTextField.endEditing(true)
+            }
+            alertController.addTextField { (textField) in
+                textField.placeholder = "Enter your name here"
+                textField.textColor = .black
+            }
+            alertController.addAction(continueButton)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func loadAndAssignUser() {
         let request : NSFetchRequest<User> = User.fetchRequest()
         
         do {
@@ -91,45 +122,45 @@ class MapViewController: UIViewController {
         }
     }
     
-//    func deleteAllRecords() {
-//        let context = CoreDataStack.shared.mainContext
-//        
-//        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Review")
-//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-//
-//        do {
-//            try context.execute(deleteRequest)
-//            try context.save()
-//        } catch {
-//            print ("There was an error")
-//        }
-//    }
+    func deleteAllRecords() {
+        let context = CoreDataStack.shared.mainContext
+        
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Review")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+        
+        do {
+            try context.execute(deleteRequest)
+            try context.save()
+        } catch {
+            print ("There was an error")
+        }
+    }
     
     @IBAction func createNewReviewTapped(_ sender: UIButton) {
         guard let mostRecentPlacemark = mostRecentPlacemark,
             let address = mostRecentPlacemark.name,
             let latitude = mostRecentPlacemark.location?.coordinate.latitude,
             let longitude = mostRecentPlacemark.location?.coordinate.longitude
-        else { return }
+            else { return }
+        
+        let alertController = UIAlertController(title: "To add a new review", message: "Please enter restaurant name below", preferredStyle: .alert)
+        let continueButton = UIAlertAction(title: "Continue", style: .default) { (action) in
+            let restaurantNameTextField = alertController.textFields![0]
             
-            let alertController = UIAlertController(title: "To add a new review", message: "please enter restaurant name below", preferredStyle: .alert)
-            let continueButton = UIAlertAction(title: "Continue", style: .default) { (action) in
-                let restaurantNameTextField = alertController.textFields![0]
-                
-                if restaurantNameTextField.text != "" {
-                    let newRestaurant = Restaurant(address: address, cusineType: "", latitude: String(Double(latitude)), longitude: String(Double(longitude)), name: restaurantNameTextField.text ?? "")
-                    restaurantNameTextField.endEditing(true)
-                    self.restaurantBeingPassed = newRestaurant
-                    self.performSegue(withIdentifier: "AddReviewSegue", sender: self)
-                }
+            if restaurantNameTextField.text != "" {
+                let newRestaurant = Restaurant(address: address, cusineType: "", latitude: String(Double(latitude)), longitude: String(Double(longitude)), name: restaurantNameTextField.text ?? "")
+                restaurantNameTextField.endEditing(true)
+                self.restaurantBeingPassed = newRestaurant
+                self.performSegue(withIdentifier: "AddReviewSegue", sender: self)
             }
-            alertController.addTextField { (textField) in
-                textField.placeholder = "Enter Restaurant Name Here..."
-                textField.textColor = .systemPurple
-            }
-            alertController.addAction(continueButton)
-            alertController.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
-            self.present(alertController, animated: true, completion: nil)
+        }
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter Restaurant Name Here..."
+            textField.textColor = .black
+        }
+        alertController.addAction(continueButton)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -172,42 +203,49 @@ extension MapViewController : CLLocationManagerDelegate {
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
-        //let button = UIButton(type: .detailDisclosure)
-//        guard let restaurant = annotation as? Restaurant else { return nil }
-//        restaurant.name = "BillyBOBS"
-//        restaurant.latitude = String(Double(mostRecentPlacemark?.location?.coordinate.latitude ?? 0.0))
-//        restaurant.longitude = String(Double(mostRecentPlacemark?.location?.coordinate.longitude ?? 0.0))
-//
-//        mapView.addAnnotation(restaurant)
+        let button = UIButton(type: .detailDisclosure)
         
         var marker: MKMarkerAnnotationView?
         
-        if restaurants.count > 0 {
-            guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "ReviewView") as? MKMarkerAnnotationView else {
-                fatalError("Incorrect Identifier")
-            }
-            annotationView.canShowCallout = true
-            annotationView.isEnabled = true
-            //annotationView.rightCalloutAccessoryView = button
-            marker = annotationView
+        loadAllRestaurants()
+        guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "ReviewView") as? MKMarkerAnnotationView else {
+            fatalError("Incorrect Identifier")
         }
+        
+        annotationView.canShowCallout = true
+        annotationView.isEnabled = true
+        annotationView.rightCalloutAccessoryView = button
+        
+        
+        marker = annotationView
         
         return marker
         
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-//        let restaurant = view.annotation as! Restaurant
-//        let placeName = restaurant.name
-//        let placeInfo = restaurant.address
-//
-//        let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
-//        ac.addAction(UIAlertAction(title: "OK", style: .default))
-//        ac.addAction(UIAlertAction(title: "Add Review", style: .default, handler: { (alert) in
-//            self.restaurantBeingPassed = restaurant
-//            self.performSegue(withIdentifier: "AddReviewSegue", sender: self)
-//        }))
-//        present(ac, animated: true)
+        let restaurant = view.annotation as! Restaurant
+        let placeName = restaurant.name
+        let placeInfo = restaurant.address
+        
+        let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Cancel", style: .default))
+        ac.addAction(UIAlertAction(title: "Open in maps", style: .default, handler: { (alert) in
+            guard let restaurantLatitude = restaurant.latitude else { return }
+            guard let restaurantLongitude = restaurant.longitude else { return }
+            let newLatitude = restaurantLatitude as NSString
+            let newlatitudeValue = newLatitude.doubleValue
+            let newLongitude = restaurantLongitude as NSString
+            let newLongitudeValue = newLongitude.doubleValue
+            
+            let coordinate = CLLocationCoordinate2D(latitude: newlatitudeValue, longitude: newLongitudeValue)
+            let placeMark = MKPlacemark(coordinate: coordinate, addressDictionary: nil)
+            let mapItem = MKMapItem(placemark: placeMark)
+            mapItem.name = restaurant.name ?? "Restaurant name unknown"
+            mapItem.openInMaps(launchOptions: nil)
+            
+        }))
+        present(ac, animated: true)
     }
 }
 

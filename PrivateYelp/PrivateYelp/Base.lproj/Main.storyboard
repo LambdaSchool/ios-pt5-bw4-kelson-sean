@@ -483,10 +483,10 @@
             </objects>
             <point key="canvasLocation" x="2189.8550724637685" y="141.96428571428569"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Test-->
         <scene sceneID="eIL-Rd-ETq">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="evU-jL-NTI" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="evU-jL-NTI" customClass="test" customModule="PrivateYelp" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hfx-H6-aVR">
@@ -884,7 +884,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ixF-XF-a0D"/>
+        <segue reference="8SL-4R-JKZ"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="addPhotoEmptyStateButton" width="90" height="137"/>

@@ -13,10 +13,24 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var hasAlreadyLaunched: Bool!
+    var delegate: MapViewController?
+    let controller = ModelController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        hasAlreadyLaunched = UserDefaults.standard.bool(forKey: "hasAlreadyLaunched")
+        
+        if (hasAlreadyLaunched) {
+            hasAlreadyLaunched = true
+        } else {
+            UserDefaults.standard.set(true, forKey: "hasAlreadyLaunched")
+        }
+                
         return true
+    }
+    
+    func setHasAlreadyLaunched(){
+        hasAlreadyLaunched = true
     }
 
     // MARK: UISceneSession Lifecycle

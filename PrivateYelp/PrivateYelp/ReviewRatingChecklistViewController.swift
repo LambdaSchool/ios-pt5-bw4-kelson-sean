@@ -50,7 +50,7 @@ class ReviewRatingChecklistViewController: UIViewController {
 //        print("Restaurant \(restaurant?.name)")
 //        print("Biatch \(review?.menuItem)")
 //        print(restaurant?.reviews?.count)
-//        print(user?.reviews?.count)
+        print(user?.name)
     }
     
     

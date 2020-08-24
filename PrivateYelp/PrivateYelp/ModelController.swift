@@ -8,8 +8,15 @@
 
 import Foundation
 import CoreData
+import UIKit
+
+protocol TESTES {
+    
+   func doThing()
+}
 
 class ModelController {
+    
     
     @discardableResult func oneTimeCreateUser(name: String, identifier: UUID = UUID()) -> User {
         
@@ -17,7 +24,6 @@ class ModelController {
         
         CoreDataStack.shared.saveToPersistentStore()
         
-        print(newUser)
         return newUser
     }
     
