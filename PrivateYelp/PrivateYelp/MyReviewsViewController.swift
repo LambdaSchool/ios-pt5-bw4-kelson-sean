@@ -111,8 +111,14 @@ extension MyReviewsViewController: UITableViewDataSource {
         return cell
     }
     
-    
-    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let reviewBeingDeleted = fetchResultsController.object(at: indexPath)
+            guard let reviewsRestaurant = reviewBeingDeleted.restaurant else { return }
+            
+            controller?.deleteRestaurantAndReview(objectOneDelete: reviewsRestaurant, objectTwoDelete: reviewBeingDeleted)
+        }
+    }
 }
 
 extension MyReviewsViewController: NSFetchedResultsControllerDelegate {

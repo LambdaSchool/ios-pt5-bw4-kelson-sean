@@ -12,15 +12,19 @@ import MapKit
 
 extension Restaurant: MKAnnotation {
     public var coordinate: CLLocationCoordinate2D {
-        guard let latitude = latitude else { fatalError("Error")}
-        guard let longitude = longitude else { fatalError("Error")}
+        guard (latitude != nil) else {
+            return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+        }
+        
+        guard let latitude = latitude else { return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)}
+        guard let longitude = longitude else {  return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)}
         let newLatitude = latitude as NSString
         let newlatitudeValue = newLatitude.doubleValue
         let newLongitude = longitude as NSString
         let newLongitudeValue = newLongitude.doubleValue
         return CLLocationCoordinate2D(latitude: newlatitudeValue, longitude: newLongitudeValue)
     }
-
+    
     public var title: String? {
         name
     }

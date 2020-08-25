@@ -46,6 +46,13 @@ class ModelController {
         
     }
     
+    func deleteRestaurantAndReview(objectOneDelete: NSManagedObject, objectTwoDelete: NSManagedObject) {
+        
+        CoreDataStack.shared.mainContext.delete(objectOneDelete)
+        CoreDataStack.shared.mainContext.delete(objectTwoDelete)
+        CoreDataStack.shared.saveToPersistentStore()
+    }
+    
     func saveToPersistentStore() {
         CoreDataStack.shared.saveToPersistentStore()
     }

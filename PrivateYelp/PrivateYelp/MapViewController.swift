@@ -165,24 +165,24 @@ class MapViewController: UIViewController {
             }
         }
         
-//        let alertController = UIAlertController(title: "To add a new review", message: "Please enter restaurant name below", preferredStyle: .alert)
-//        let continueButton = UIAlertAction(title: "Continue", style: .default) { (action) in
-//            let restaurantNameTextField = alertController.textFields![0]
-//
-//            if restaurantNameTextField.text != "" {
-//                let newRestaurant = Restaurant(address: address, cusineType: "", latitude: String(Double(latitude)), longitude: String(Double(longitude)), name: restaurantNameTextField.text ?? "")
-//                restaurantNameTextField.endEditing(true)
-//                self.restaurantBeingPassed = newRestaurant
-//                self.performSegue(withIdentifier: "AddReviewSegue", sender: self)
-//            }
-//        }
-//        alertController.addTextField { (textField) in
-//            textField.placeholder = "Enter Restaurant Name Here..."
-//            textField.textColor = .black
-//        }
-//        alertController.addAction(continueButton)
-//        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-//        self.present(alertController, animated: true, completion: nil)
+        //        let alertController = UIAlertController(title: "To add a new review", message: "Please enter restaurant name below", preferredStyle: .alert)
+        //        let continueButton = UIAlertAction(title: "Continue", style: .default) { (action) in
+        //            let restaurantNameTextField = alertController.textFields![0]
+        //
+        //            if restaurantNameTextField.text != "" {
+        //                let newRestaurant = Restaurant(address: address, cusineType: "", latitude: String(Double(latitude)), longitude: String(Double(longitude)), name: restaurantNameTextField.text ?? "")
+        //                restaurantNameTextField.endEditing(true)
+        //                self.restaurantBeingPassed = newRestaurant
+        //                self.performSegue(withIdentifier: "AddReviewSegue", sender: self)
+        //            }
+        //        }
+        //        alertController.addTextField { (textField) in
+        //            textField.placeholder = "Enter Restaurant Name Here..."
+        //            textField.textColor = .black
+        //        }
+        //        alertController.addAction(continueButton)
+        //        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        //        self.present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -230,51 +230,53 @@ extension MapViewController : CLLocationManagerDelegate {
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
-         let button = UIButton(type: .detailDisclosure)
-               
-               var marker: MKMarkerAnnotationView?
-               
-               loadAllRestaurants()
-               guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "ReviewView") as? MKMarkerAnnotationView else {
-                   fatalError("Incorrect Identifier")
-               }
-               
-               annotationView.canShowCallout = true
-               annotationView.isEnabled = true
-               annotationView.rightCalloutAccessoryView = button
-               
-               
-               marker = annotationView
-               
-               return marker
+        let button = UIButton(type: .detailDisclosure)
+        
+        var marker: MKMarkerAnnotationView?
+        
+        loadAllRestaurants()
+        guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "ReviewView") as? MKMarkerAnnotationView else {
+            fatalError("Incorrect Identifier")
+        }
+        
+        annotationView.titleVisibility = .adaptive
+        annotationView.animatesWhenAdded = true
+        annotationView.canShowCallout = true
+        annotationView.isEnabled = true
+        annotationView.rightCalloutAccessoryView = button
+        
+        
+        marker = annotationView
+        
+        return marker
         
     }
     
-       func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-            let restaurant = view.annotation as! Restaurant
-            let placeName = restaurant.name
-            let placeInfo = restaurant.address
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let restaurant = view.annotation as! Restaurant
+        let placeName = restaurant.name
+        let placeInfo = restaurant.address
+        
+        let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Cancel", style: .default))
+        ac.addAction(UIAlertAction(title: "Open in maps", style: .default, handler: { (alert) in
+            guard let restaurantLatitude = restaurant.latitude else { return }
+            guard let restaurantLongitude = restaurant.longitude else { return }
+            let newLatitude = restaurantLatitude as NSString
+            let newlatitudeValue = newLatitude.doubleValue
+            let newLongitude = restaurantLongitude as NSString
+            let newLongitudeValue = newLongitude.doubleValue
             
-            let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Cancel", style: .default))
-            ac.addAction(UIAlertAction(title: "Open in maps", style: .default, handler: { (alert) in
-                guard let restaurantLatitude = restaurant.latitude else { return }
-                guard let restaurantLongitude = restaurant.longitude else { return }
-                let newLatitude = restaurantLatitude as NSString
-                let newlatitudeValue = newLatitude.doubleValue
-                let newLongitude = restaurantLongitude as NSString
-                let newLongitudeValue = newLongitude.doubleValue
-                
-                let coordinate = CLLocationCoordinate2D(latitude: newlatitudeValue, longitude: newLongitudeValue)
-                let placeMark = MKPlacemark(coordinate: coordinate, addressDictionary: nil)
-                let mapItem = MKMapItem(placemark: placeMark)
-                mapItem.name = restaurant.name ?? "Restaurant name unknown"
-                mapItem.openInMaps(launchOptions: nil)
-                
-            }))
-            present(ac, animated: true)
-        }
+            let coordinate = CLLocationCoordinate2D(latitude: newlatitudeValue, longitude: newLongitudeValue)
+            let placeMark = MKPlacemark(coordinate: coordinate, addressDictionary: nil)
+            let mapItem = MKMapItem(placemark: placeMark)
+            mapItem.name = restaurant.name ?? "Restaurant name unknown"
+            mapItem.openInMaps(launchOptions: nil)
+            
+        }))
+        present(ac, animated: true)
     }
+}
 
 extension MapViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
