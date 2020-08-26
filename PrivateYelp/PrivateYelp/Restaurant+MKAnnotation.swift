@@ -29,10 +29,30 @@ extension Restaurant: MKAnnotation {
         name
     }
     public var subtitle: String? {
-        if let address = address {
-            return "Address: \(address)"
-        } else {
-            return "Address: N/A"
+        guard let restaurantReviews: [Review] = reviews?.allObjects as? [Review] else { return "" }
+        var restaurantRating = 0.0
+        
+        for review in restaurantReviews {
+            restaurantRating = review.overallRating
+        }
+        
+        return "\(determineAmountOfStars(overallRating: restaurantRating))"
+        
+    }
+    private func determineAmountOfStars(overallRating: Double) -> String {
+        switch overallRating {
+        case 1.0:
+            return "⭑"
+        case 2.0:
+            return "⭑⭑"
+        case 3.0:
+            return "⭑⭑⭑"
+        case 4.0:
+            return "⭑⭑⭑⭑"
+        case 5.0:
+            return "⭑⭑⭑⭑⭑"
+        default:
+            return ""
         }
     }
 }

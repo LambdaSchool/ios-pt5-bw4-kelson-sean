@@ -62,6 +62,7 @@
                         <outlet property="mapView" destination="j6O-lq-bBq" id="cJk-hh-Hl4"/>
                         <outlet property="myReviewsButton" destination="uRy-Rn-UwU" id="Zzw-JX-mLT"/>
                         <segue destination="hPo-ha-Ng0" kind="show" identifier="AddReviewSegue" id="HSQ-p9-vEf"/>
+                        <segue destination="hPo-ha-Ng0" kind="show" identifier="ViewEditReviewFromCallout" id="fhT-Sd-RI4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yIS-Pi-WT1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -847,7 +848,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="HSQ-p9-vEf"/>
+        <segue reference="fhT-Sd-RI4"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="addPhotoEmptyStateButton" width="90" height="137"/>

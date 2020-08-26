@@ -35,8 +35,7 @@ class ReviewRatingChecklistViewController: UIViewController {
     var isFineDiningSelected: Bool = false
     
     var restaurant: Restaurant?
-    var reviewFromDetail: Review?
-    var review: Review? 
+    var review: Review?
     var controller: ModelController?
     var user: User?
     
@@ -47,8 +46,6 @@ class ReviewRatingChecklistViewController: UIViewController {
         setUpViews()
         updateViews()
 //        print("CONTROLLA: \(controller)")
-//        print("Restaurant \(restaurant?.name)")
-//        print("Biatch \(review?.menuItem)")
 //        print(restaurant?.reviews?.count)
 //        print(user?.reviews?.count)
     }

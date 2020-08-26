@@ -29,6 +29,7 @@ class MapViewController: UIViewController {
     
     var restaurantBeingPassed: Restaurant?
     var user: User?
+    var reviewPassedFromCallout: Review?
     var controller = ModelController()
     var googlePlaceController = GooglePlaceController()
     
@@ -105,8 +106,8 @@ class MapViewController: UIViewController {
         do {
             let arrayOfUserReturned = try CoreDataStack.shared.mainContext.fetch(request)
             user = arrayOfUserReturned[0]
-            print(user?.reviews?.count)
-            print(user?.reviews)
+//            print(user?.reviews?.count)
+//            print(user?.reviews)
         } catch {
             print("Error loading reviews")
         }
@@ -229,7 +230,6 @@ extension MapViewController: MKMapViewDelegate {
         
         var marker: MKMarkerAnnotationView?
         
-        loadAllRestaurants()
         guard let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "ReviewView") as? MKMarkerAnnotationView else {
             fatalError("Incorrect Identifier")
         }
@@ -240,21 +240,28 @@ extension MapViewController: MKMapViewDelegate {
         annotationView.isEnabled = true
         annotationView.rightCalloutAccessoryView = button
         
-        
         marker = annotationView
         
         return marker
-        
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        let restaurant = view.annotation as! Restaurant
-        let placeName = restaurant.name
-        let placeInfo = restaurant.address
         
-        let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
+        let restaurant = view.annotation as! Restaurant
+        guard let restaurantReviews: [Review] = restaurant.reviews?.allObjects as? [Review] else { return }
+        var restaurantRating = 0.0
+        for review in restaurantReviews {
+            restaurantRating = review.overallRating
+            reviewPassedFromCallout = review
+        }
+        let restaurantName = restaurant.name
+        let restRating = restaurantRating
+        
+        let ac = UIAlertController(title: restaurantName, message: "\(determineAmountOfStars(overallRating: restRating))", preferredStyle: .alert)
+        
         ac.addAction(UIAlertAction(title: "Cancel", style: .default))
-        ac.addAction(UIAlertAction(title: "Open in maps", style: .default, handler: { (alert) in
+        ac.addAction(UIAlertAction(title: "Open In Maps", style: .default, handler: { (alert) in
+            
             guard let restaurantLatitude = restaurant.latitude else { return }
             guard let restaurantLongitude = restaurant.longitude else { return }
             let newLatitude = restaurantLatitude as NSString
@@ -267,12 +274,18 @@ extension MapViewController: MKMapViewDelegate {
             let mapItem = MKMapItem(placemark: placeMark)
             mapItem.name = restaurant.name ?? "Restaurant name unknown"
             mapItem.openInMaps(launchOptions: nil)
+        }))
+        ac.addAction(UIAlertAction(title: "View Review", style: .default, handler: { (alert) in
+            
+            self.restaurantBeingPassed = restaurant
+            self.performSegue(withIdentifier: "ViewEditReviewFromCallout", sender: self)
             
         }))
         present(ac, animated: true)
     }
 }
 
+// MARK: - Navigation
 extension MapViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddReviewSegue" {
@@ -280,10 +293,37 @@ extension MapViewController {
             destinationVC?.restaurant = self.restaurantBeingPassed
             destinationVC?.controller = self.controller
             destinationVC?.user = self.user
-        } else if segue.identifier == "MyReviewsSegue" {
+        } else if segue.identifier == "ViewEditReviewFromCallout" {
+            let destinationVC = segue.destination as? ReviewRatingChecklistViewController
+            destinationVC?.restaurant = self.restaurantBeingPassed
+            destinationVC?.controller = self.controller
+            destinationVC?.user = self.user
+            destinationVC?.review = self.reviewPassedFromCallout
+        }
+        else if segue.identifier == "MyReviewsSegue" {
             let destinationVC = segue.destination as? MyReviewsViewController
             destinationVC?.user = self.user
             destinationVC?.controller = self.controller
+        }
+    }
+}
+
+extension MapViewController {
+    
+    func determineAmountOfStars(overallRating: Double) -> String {
+        switch overallRating {
+        case 1.0:
+            return "⭑"
+        case 2.0:
+            return "⭑⭑"
+        case 3.0:
+            return "⭑⭑⭑"
+        case 4.0:
+            return "⭑⭑⭑⭑"
+        case 5.0:
+            return "⭑⭑⭑⭑⭑"
+        default:
+            return ""
         }
     }
 }
