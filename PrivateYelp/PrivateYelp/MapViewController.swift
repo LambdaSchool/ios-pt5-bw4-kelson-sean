@@ -45,6 +45,10 @@ class MapViewController: UIViewController {
             loadAllRestaurants()
             self.mapView.addAnnotations(restaurants)
         }
+        
+        for annotation in self.mapView.selectedAnnotations {
+            self.mapView.deselectAnnotation(annotation, animated: true)
+        }
     }
     
     override func viewDidLoad() {
@@ -237,6 +241,7 @@ extension MapViewController: MKMapViewDelegate {
         annotationView.titleVisibility = .adaptive
         annotationView.animatesWhenAdded = true
         annotationView.canShowCallout = true
+        annotationView.subtitleVisibility = .visible
         annotationView.isEnabled = true
         annotationView.rightCalloutAccessoryView = button
         
@@ -249,15 +254,11 @@ extension MapViewController: MKMapViewDelegate {
         
         let restaurant = view.annotation as! Restaurant
         guard let restaurantReviews: [Review] = restaurant.reviews?.allObjects as? [Review] else { return }
-        var restaurantRating = 0.0
         for review in restaurantReviews {
-            restaurantRating = review.overallRating
             reviewPassedFromCallout = review
         }
-        let restaurantName = restaurant.name
-        let restRating = restaurantRating
         
-        let ac = UIAlertController(title: restaurantName, message: "\(determineAmountOfStars(overallRating: restRating))", preferredStyle: .alert)
+        let ac = UIAlertController(title: restaurant.name ?? "", message: "\(restaurant.address ?? "")", preferredStyle: .alert)
         
         ac.addAction(UIAlertAction(title: "Cancel", style: .default))
         ac.addAction(UIAlertAction(title: "Open In Maps", style: .default, handler: { (alert) in

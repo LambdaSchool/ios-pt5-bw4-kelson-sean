@@ -45,9 +45,9 @@ class ReviewRatingChecklistViewController: UIViewController {
         
         setUpViews()
         updateViews()
-//        print("CONTROLLA: \(controller)")
-//        print(restaurant?.reviews?.count)
-//        print(user?.reviews?.count)
+        //        print("CONTROLLA: \(controller)")
+        //        print(restaurant?.reviews?.count)
+        //        print(user?.reviews?.count)
     }
     
     
@@ -96,15 +96,15 @@ class ReviewRatingChecklistViewController: UIViewController {
         if let review = self.review {
             switch review.overallRating {
             case 1:
-                self.oneStarTapped(self)
+                self.oneStarTapped(oneStarButton)
             case 2:
-                self.twoStarTapped(self)
+                self.twoStarTapped(twoStarButton)
             case 3:
-                self.threeStarTapped(self)
+                self.threeStarTapped(threeStarButton)
             case 4:
-                self.fourStarTapped(self)
+                self.fourStarTapped(fourStarButton)
             default:
-                self.fiveStarTapped(self)
+                self.fiveStarTapped(fiveStarButton)
             }
         }
         
@@ -135,57 +135,28 @@ class ReviewRatingChecklistViewController: UIViewController {
         }
     }
     
-    @IBAction func oneStarTapped(_ sender: Any) {
-        self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.twoStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        self.threeStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        
-        overallRatingValue = 1
+    @IBAction func oneStarTapped(_ sender: UIButton) {
+        setStarImage(sender: sender)
     }
     
-    @IBAction func twoStarTapped(_ sender: Any) {
-        self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.threeStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        
-        overallRatingValue = 2
+    @IBAction func twoStarTapped(_ sender: UIButton) {
+        setStarImage(sender: sender)
         
     }
     
-    @IBAction func threeStarTapped(_ sender: Any) {
-        self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        
-        overallRatingValue = 3
+    @IBAction func threeStarTapped(_ sender: UIButton) {
+        setStarImage(sender: sender)
     }
     
-    @IBAction func fourStarTapped(_ sender: Any) {
-        self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.fourStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
-        
-        overallRatingValue = 4
+    @IBAction func fourStarTapped(_ sender: UIButton) {
+        setStarImage(sender: sender)
     }
     
-    @IBAction func fiveStarTapped(_ sender: Any) {
-        self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.fourStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        self.fiveStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
-        
-        overallRatingValue = 5
-        
+    @IBAction func fiveStarTapped(_ sender: UIButton) {
+        setStarImage(sender: sender)
     }
+    
+    
     
     private func updateReview(review: Review) {
         
@@ -234,7 +205,7 @@ class ReviewRatingChecklistViewController: UIViewController {
             
             controller?.createReview(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, itemPhoto: nil, menuItem: "", noKids: isKidsSelected, reviewNotes: "", smallSpace: isSmallSpaceSelected, restauraunt: restaurant, user: user)
         }
-                
+        
         self.navigationController?.popToRootViewController(animated: true)
     }
     
@@ -257,7 +228,7 @@ class ReviewRatingChecklistViewController: UIViewController {
             guard let restaurant = restaurant else { return }
             guard let user = user else { return }
             
-           let newReview = controller?.createReview(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, itemPhoto: nil, menuItem: "", noKids: isKidsSelected, reviewNotes: "", smallSpace: isSmallSpaceSelected, restauraunt: restaurant, user: user)
+            let newReview = controller?.createReview(overallRating: Double(overallRatingValue), dirtyBathrooms: isDirtyBathroomsSelected, fineDining: isFineDiningSelected, goodForDates: isGoodForDatesSelected, itemPhoto: nil, menuItem: "", noKids: isKidsSelected, reviewNotes: "", smallSpace: isSmallSpaceSelected, restauraunt: restaurant, user: user)
             
             review = newReview
         }
@@ -275,7 +246,7 @@ class ReviewRatingChecklistViewController: UIViewController {
     }
 }
 
-// MARK: - Checking and updating checklist
+// MARK: - Updating Checklist and Stars
 extension ReviewRatingChecklistViewController {
     private func checkAndUpdateChecklist(sender: UIButton) {
         if sender == noKidsButton {
@@ -320,6 +291,57 @@ extension ReviewRatingChecklistViewController {
                 self.fineDiningButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
                 self.isFineDiningSelected = false
             }
+        }
+    }
+    
+    private func setStarImage(sender: UIButton) {
+        switch sender {
+        case oneStarButton:
+            self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.twoStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            self.threeStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            
+            overallRatingValue = 1
+        
+        case twoStarButton:
+            self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.threeStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            
+            overallRatingValue = 2
+        
+        case threeStarButton:
+            self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.fourStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            
+            overallRatingValue = 3
+            
+        case fourStarButton:
+            self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.fourStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.fiveStarButton.setImage(UIImage(named: "starButtonUnselected"), for: .normal)
+            
+            overallRatingValue = 4
+            
+        case fiveStarButton:
+            self.oneStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.twoStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.threeStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.fourStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            self.fiveStarButton.setImage(UIImage(named: "starButtonSelected"), for: .normal)
+            
+            overallRatingValue = 5
+        default:
+            print("")
         }
     }
 }
