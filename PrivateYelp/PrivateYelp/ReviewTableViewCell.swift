@@ -10,18 +10,18 @@ import UIKit
 
 class ReviewTableViewCell: UITableViewCell {
     
-    var review: Review? {
-        didSet {
-            updateViews()
-        }
-    }
-
-
+    // MARK: - Outlets
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
     
+    // MARK: - Properties
+    var review: Review? {
+        didSet {
+            updateViews()
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,6 +35,7 @@ class ReviewTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    // MARK: - Private Functions
     private func updateViews() {
         guard let review = review else { return }
         nameLabel.text = review.restaurant?.name
@@ -51,5 +52,4 @@ class ReviewTableViewCell: UITableViewCell {
         cellView.layer.shadowOffset = CGSize(width: 0, height: 4)
         cellView.layer.masksToBounds = false
     }
-    
 }

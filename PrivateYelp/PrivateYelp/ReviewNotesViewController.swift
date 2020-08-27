@@ -10,6 +10,7 @@ import UIKit
 
 class ReviewNotesViewController: UIViewController {
 
+    // MARK: - Outlets
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
@@ -17,18 +18,20 @@ class ReviewNotesViewController: UIViewController {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     
+    // MARK: - Properties
     var restaurant: Restaurant?
     var review: Review?
     var controller: ModelController?
     
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpViews()
         updateViews()
-        print(restaurant?.name)
     }
     
+    //MARK: - Private Functions
     private func setUpViews() {
         
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.extraLight)
@@ -89,6 +92,7 @@ class ReviewNotesViewController: UIViewController {
         
     }
 
+    // MARK: - IBActions
     @IBAction func saveButtonTapped(_ sender: Any) {
         self.review?.reviewNotes = self.textView.text
         guard let review = review else { return }

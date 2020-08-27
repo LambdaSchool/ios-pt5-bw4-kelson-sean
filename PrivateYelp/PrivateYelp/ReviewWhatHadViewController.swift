@@ -10,6 +10,8 @@ import UIKit
 
 class ReviewWhatHadViewController: UIViewController {
     
+    // MARK: - Outlets
+
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
@@ -17,10 +19,12 @@ class ReviewWhatHadViewController: UIViewController {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var whatHadTextView: UITextView!
     
+    // MARK: - Properties
     var restaurant: Restaurant?
     var review: Review?
     var controller: ModelController?
     
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,6 +32,7 @@ class ReviewWhatHadViewController: UIViewController {
         updateViews()
     }
     
+    // MARK: - Private functions
     private func setUpViews() {
         
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.extraLight)
@@ -84,6 +89,7 @@ class ReviewWhatHadViewController: UIViewController {
         controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
     }
     
+    // MARK: - IBActions
     @IBAction func saveButtonTapped(_ sender: Any) {
         self.review?.menuItem = self.whatHadTextView.text
         guard let review = review else { return }
@@ -101,7 +107,6 @@ class ReviewWhatHadViewController: UIViewController {
     }
     
     // MARK: - Navigation
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "PhotosSegue" {
             let destinationVC = segue.destination as? ReviewPhotosViewController

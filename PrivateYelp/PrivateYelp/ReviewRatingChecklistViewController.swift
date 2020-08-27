@@ -10,6 +10,7 @@ import UIKit
 
 class ReviewRatingChecklistViewController: UIViewController {
     
+    // MARK: - Outlets
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
@@ -26,31 +27,27 @@ class ReviewRatingChecklistViewController: UIViewController {
     @IBOutlet weak var dirtyBathroomsButton: UIButton!
     @IBOutlet weak var fineDiningButton: UIButton!
     
+    // MARK: - Properties
     var overallRatingValue = 0
-    
     var isKidsSelected: Bool = false
     var isGoodForDatesSelected: Bool = false
     var isSmallSpaceSelected: Bool = false
     var isDirtyBathroomsSelected: Bool = false
     var isFineDiningSelected: Bool = false
-    
     var restaurant: Restaurant?
     var review: Review?
     var controller: ModelController?
     var user: User?
     
-    
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUpViews()
         updateViews()
-        //        print("CONTROLLA: \(controller)")
-        //        print(restaurant?.reviews?.count)
-        //        print(user?.reviews?.count)
     }
     
-    
+    // MARK: - Private Functions
     private func setUpViews() {
         
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.extraLight)
@@ -135,6 +132,16 @@ class ReviewRatingChecklistViewController: UIViewController {
         }
     }
     
+    private func updateReview(review: Review) {
+        
+        guard let restaurant = review.restaurant else { return }
+        guard let user = review.user else { return }
+        
+        controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
+        
+    }
+    
+    // MARK: - IBActions
     @IBAction func oneStarTapped(_ sender: UIButton) {
         setStarImage(sender: sender)
     }
@@ -154,17 +161,6 @@ class ReviewRatingChecklistViewController: UIViewController {
     
     @IBAction func fiveStarTapped(_ sender: UIButton) {
         setStarImage(sender: sender)
-    }
-    
-    
-    
-    private func updateReview(review: Review) {
-        
-        guard let restaurant = review.restaurant else { return }
-        guard let user = review.user else { return }
-        
-        controller?.updateReview(review: review, overallRating: review.overallRating, dirtyBathrooms: review.dirtyBathrooms, fineDining: review.fineDining, goodForDates: review.goodForDates, itemPhoto: review.itemPhoto, menuItem: review.menuItem ?? "", noKids: review.noKids, reviewNotes: review.reviewNotes ?? "", smallSpace: review.smallSpace, restauraunt: restaurant, user: user)
-        
     }
     
     @IBAction func noKidsTapped(_ sender: UIButton) {
@@ -235,7 +231,6 @@ class ReviewRatingChecklistViewController: UIViewController {
     }
     
     // MARK: - Navigation
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "WhatIHadSegue" {
             let destinationVC = segue.destination as? ReviewWhatHadViewController
@@ -277,7 +272,6 @@ extension ReviewRatingChecklistViewController {
             if !self.isDirtyBathroomsSelected {
                 self.dirtyBathroomsButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
                 self.isDirtyBathroomsSelected = true
-                print(self.isDirtyBathroomsSelected)
             } else {
                 self.dirtyBathroomsButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
                 self.isDirtyBathroomsSelected = false
@@ -286,7 +280,6 @@ extension ReviewRatingChecklistViewController {
             if !self.isFineDiningSelected {
                 self.fineDiningButton.setImage(UIImage(named: "checklistButtonSelected"), for: .normal)
                 self.isFineDiningSelected = true
-                print(self.isFineDiningSelected)
             } else {
                 self.fineDiningButton.setImage(UIImage(named: "checklistButtonUnselected"), for: .normal)
                 self.isFineDiningSelected = false
@@ -294,6 +287,7 @@ extension ReviewRatingChecklistViewController {
         }
     }
     
+    // Sets the star image based on which star is tapped.
     private func setStarImage(sender: UIButton) {
         switch sender {
         case oneStarButton:

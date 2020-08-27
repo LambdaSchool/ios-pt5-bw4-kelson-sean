@@ -52,8 +52,4 @@ class ModelController {
         CoreDataStack.shared.mainContext.delete(objectTwoDelete)
         CoreDataStack.shared.saveToPersistentStore()
     }
-    
-    func saveToPersistentStore() {
-        CoreDataStack.shared.saveToPersistentStore()
-    }
 }

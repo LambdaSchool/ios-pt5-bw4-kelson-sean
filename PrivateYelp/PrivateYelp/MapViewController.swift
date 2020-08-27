@@ -12,9 +12,11 @@ import CoreData
 
 class MapViewController: UIViewController {
     
+    // MARK: - Outlets
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var myReviewsButton: UIButton!
     
+    // MARK: - Properties
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let locationManager = CLLocationManager()
     var mostRecentPlacemark: CLPlacemark? {
@@ -26,7 +28,6 @@ class MapViewController: UIViewController {
     }
     
     var restaurants: [Restaurant] = []
-    
     var restaurantBeingPassed: Restaurant?
     var user: User?
     var reviewPassedFromCallout: Review?
@@ -34,6 +35,7 @@ class MapViewController: UIViewController {
     var googlePlaceController = GooglePlaceController()
     var isRegionSet: Bool = false
     
+    // MARK: - View Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
@@ -80,7 +82,6 @@ class MapViewController: UIViewController {
     }
     
     //MARK: - Private Functions
-    
     private func presentAlertAndCreateUser() {
         
         if (!appDelegate.hasAlreadyLaunched) {
@@ -109,20 +110,18 @@ class MapViewController: UIViewController {
         myReviewsButton.layer.masksToBounds = false
     }
     
-    func loadAndAssignUser() {
+    private func loadAndAssignUser() {
         let request : NSFetchRequest<User> = User.fetchRequest()
         
         do {
             let arrayOfUserReturned = try CoreDataStack.shared.mainContext.fetch(request)
             user = arrayOfUserReturned[0]
-//            print(user?.reviews?.count)
-//            print(user?.reviews)
         } catch {
             print("Error loading reviews")
         }
     }
     
-    func loadAllRestaurants() {
+    private func loadAllRestaurants() {
         let request : NSFetchRequest<Restaurant> = Restaurant.fetchRequest()
         
         do {
@@ -133,7 +132,7 @@ class MapViewController: UIViewController {
         }
     }
     
-    func deleteAllRecords() {
+    private func deleteAllRecords() {
         let context = CoreDataStack.shared.mainContext
         
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Review")
@@ -147,6 +146,7 @@ class MapViewController: UIViewController {
         }
     }
     
+    // MARK: - IBActions
     @IBAction func createNewReviewTapped(_ sender: UIButton) {
         guard let mostRecentPlacemark = mostRecentPlacemark,
             let address = mostRecentPlacemark.name,
@@ -326,7 +326,7 @@ extension MapViewController {
 
 extension MapViewController {
     
-    func determineAmountOfStars(overallRating: Double) -> String {
+    private func determineAmountOfStars(overallRating: Double) -> String {
         switch overallRating {
         case 1.0:
             return "⭑"

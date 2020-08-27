@@ -11,9 +11,11 @@ import CoreData
 
 class MyReviewsViewController: UIViewController {
 
+    // MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var mapButton: UIButton!
     
+    // MARK: - Properties
     var controller: ModelController?
     var reviews: [Review] = []
     var user: User?
@@ -40,18 +42,16 @@ class MyReviewsViewController: UIViewController {
         return frc
     }()
     
-    
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.delegate = self
         tableView.dataSource = self
-        
         setUpViews()
-        print("CONTROLLA: \(controller)")
-        //loadReviews()
     }
     
+    //MARK: - Private Functions
     private func setUpViews() {
         let nib = UINib(nibName: "ReviewTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "ReviewCell")
@@ -65,23 +65,13 @@ class MyReviewsViewController: UIViewController {
         mapButton.layer.masksToBounds = false
     }
     
-    func loadReviews() {
-        let request: NSFetchRequest<Review> = Review.fetchRequest()
-        do {
-            reviews = try CoreDataStack.shared.mainContext.fetch(request)
-        } catch {
-            print("Unable to load reviews.")
-        }
-        tableView.reloadData()
-    }
-    
+    //MARK: - IBActions
     @IBAction func mapButtonTapped(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
     
 
     // MARK: - Navigation
-
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowReviewDetailSegue" {
             let destinationVC = segue.destination as? ReviewRatingChecklistViewController
@@ -97,6 +87,7 @@ class MyReviewsViewController: UIViewController {
     }
 }
 
+//MARK: - UITableViewDataSource & Delegate
 extension MyReviewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fetchResultsController.sections?[section].numberOfObjects ?? 0
@@ -120,7 +111,13 @@ extension MyReviewsViewController: UITableViewDataSource {
         }
     }
 }
+extension MyReviewsViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "ShowReviewDetailSegue", sender: tableView)
+    }
+}
 
+//MARK: - NSFetchedResultsControllerDelegate
 extension MyReviewsViewController: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -170,11 +167,5 @@ extension MyReviewsViewController: NSFetchedResultsControllerDelegate {
         default:
             return
         }
-    }
-}
-
-extension MyReviewsViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "ShowReviewDetailSegue", sender: tableView)
     }
 }

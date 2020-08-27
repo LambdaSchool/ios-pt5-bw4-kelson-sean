@@ -10,6 +10,7 @@ import UIKit
 
 class ReviewPhotosViewController: UIViewController, UINavigationControllerDelegate {
     
+    // MARK: - Outlets
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
@@ -17,22 +18,22 @@ class ReviewPhotosViewController: UIViewController, UINavigationControllerDelega
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var choosePhotoButton: UIButton!
     
+    // MARK: - Properties
     var restaurant: Restaurant?
     var review: Review?
     var controller: ModelController?
     var imagePicker = UIImagePickerController()
     var imageData: Data?
     
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUpViews()
         updateViews()
-        print(restaurant?.name)
-        print(review?.menuItem)
-
     }
     
+    //MARK: - Private Functions
     private func setUpViews() {
         
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.extraLight)
@@ -93,6 +94,7 @@ class ReviewPhotosViewController: UIViewController, UINavigationControllerDelega
         
     }
     
+    //MARK: - IBActions
     @IBAction func addPhotoTapped(_ sender: Any) {
         if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
             imagePicker.delegate = self
@@ -123,7 +125,6 @@ class ReviewPhotosViewController: UIViewController, UINavigationControllerDelega
     }
     
     // MARK: - Navigation
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ReviewNotesSegue" {
             let destinationVC = segue.destination as? ReviewNotesViewController
@@ -134,6 +135,7 @@ class ReviewPhotosViewController: UIViewController, UINavigationControllerDelega
     }
 }
 
+// MARK: UIImage Picker Delegate
 extension ReviewPhotosViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.originalImage] as? UIImage else { return }

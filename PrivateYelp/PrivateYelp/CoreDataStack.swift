@@ -14,10 +14,6 @@ class CoreDataStack {
     
     static let shared = CoreDataStack()
     
-    private init() {
-        
-    }
-    
     lazy var container: NSPersistentContainer = {
         
         let container = NSPersistentContainer(name: "PrivateYelp")
