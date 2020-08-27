@@ -126,7 +126,6 @@ class MapViewController: UIViewController {
         
         do {
             restaurants = try CoreDataStack.shared.mainContext.fetch(request)
-            print("Restaurants: \(restaurants.count)")
         } catch {
             print("Error loading Restaurants")
         }
